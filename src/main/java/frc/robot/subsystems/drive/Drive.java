@@ -11,7 +11,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-// tester
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;

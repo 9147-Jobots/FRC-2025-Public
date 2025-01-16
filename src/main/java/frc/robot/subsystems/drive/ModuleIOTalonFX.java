@@ -25,6 +25,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
+
 import java.util.Queue;
 
 /**
@@ -46,18 +51,18 @@ public class ModuleIOTalonFX implements ModuleIO {
 
   private final Queue<Double> timestampQueue;
 
-  private final StatusSignal<Double> drivePosition;
+  private final StatusSignal<Angle> drivePosition;
   private final Queue<Double> drivePositionQueue;
-  private final StatusSignal<Double> driveVelocity;
-  private final StatusSignal<Double> driveAppliedVolts;
-  private final StatusSignal<Double> driveCurrent;
+  private final StatusSignal<AngularVelocity> driveVelocity;
+  private final StatusSignal<Voltage> driveAppliedVolts;
+  private final StatusSignal<Current> driveCurrent;
 
-  private final StatusSignal<Double> turnAbsolutePosition;
-  private final StatusSignal<Double> turnPosition;
+  private final StatusSignal<Angle> turnAbsolutePosition;
+  private final StatusSignal<Angle> turnPosition;
   private final Queue<Double> turnPositionQueue;
-  private final StatusSignal<Double> turnVelocity;
-  private final StatusSignal<Double> turnAppliedVolts;
-  private final StatusSignal<Double> turnCurrent;
+  private final StatusSignal<AngularVelocity> turnVelocity;
+  private final StatusSignal<Voltage> turnAppliedVolts;
+  private final StatusSignal<Current> turnCurrent;
 
   // Gear ratios for SDS MK4i L2, adjust as necessary
   private final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
@@ -82,33 +87,33 @@ public class ModuleIOTalonFX implements ModuleIO {
         absoluteEncoderOffset = Rotation2d.fromDegrees(34.536328); // MUST BE CALIBRATED
         isTurnMotorInverted = false;
         break;
-      case 3:
+      case 2:
         driveTalon = new TalonFX(6);
         turnTalon = new TalonFX(7);
         cancoder = new CANcoder(8);
         absoluteEncoderOffset = Rotation2d.fromDegrees(138.557812 - 180); // MUST BE CALIBRATED
         isTurnMotorInverted = true;
         break;
-      case 2:
+      case 3:
         driveTalon = new TalonFX(9);
         turnTalon = new TalonFX(10);
         cancoder = new CANcoder(11);
         absoluteEncoderOffset = Rotation2d.fromDegrees(-4.008984); // MUST BE CALIBRATED
         isTurnMotorInverted = true;
         break;
-      default:
+        default:
         throw new RuntimeException("Invalid module index");
-    }
-
-    var driveConfig = new TalonFXConfiguration();
-    driveConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
-    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    driveTalon.getConfigurator().apply(driveConfig);
-    setDriveBrakeMode(true);
-
-    var turnConfig = new TalonFXConfiguration();
-    turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
-    turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+      }
+      
+      var driveConfig = new TalonFXConfiguration();
+      driveConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
+      driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+      driveTalon.getConfigurator().apply(driveConfig);
+      setDriveBrakeMode(true);
+      
+      var turnConfig = new TalonFXConfiguration();
+      turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
+      turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     turnTalon.getConfigurator().apply(turnConfig);
     turnTalon.setInverted(isTurnMotorInverted);
     setTurnBrakeMode(true);

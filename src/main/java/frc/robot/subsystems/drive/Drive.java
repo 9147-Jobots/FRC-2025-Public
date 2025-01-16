@@ -17,9 +17,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -87,6 +85,10 @@ public class Drive extends SubsystemBase {
     // SparkMaxOdometryThread.getInstance().start();
 
     // Configure AutoBuilder for PathPlanner
+    AutoBuilder.configure(this::getPose, this::setPose, () -> kinematics.toChassisSpeeds(getModuleStates()), this, this::runVelocity, 
+      new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()), null, null, null);
+
+
     AutoBuilder.configureHolonomic(
         this::getPose,
         this::setPose,

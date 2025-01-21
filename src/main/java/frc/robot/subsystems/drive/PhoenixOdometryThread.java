@@ -19,6 +19,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
@@ -70,7 +70,7 @@ public class PhoenixOdometryThread extends Thread {
     signalsLock.lock();
     Drive.odometryLock.lock();
     try {
-      isCANFD = CANBus.isNetworkFD(device.getNetwork());
+      isCANFD = new CANBus(device.getNetwork()).isNetworkFD();
       BaseStatusSignal[] newSignals = new BaseStatusSignal[signals.length + 1];
       System.arraycopy(signals, 0, newSignals, 0, signals.length);
       newSignals[signals.length] = signal;
@@ -119,7 +119,7 @@ public class PhoenixOdometryThread extends Thread {
       // Save new data to queues
       Drive.odometryLock.lock();
       try {
-        double timestamp = Logger.getRealTimestamp() / 1e6;
+        double timestamp = RobotController.getFPGATime() / 1e6;
         double totalLatency = 0.0;
         for (BaseStatusSignal signal : signals) {
           totalLatency += signal.getTimestamp().getLatency();

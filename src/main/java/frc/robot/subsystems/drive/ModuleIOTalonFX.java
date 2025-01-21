@@ -16,7 +16,6 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -46,7 +45,9 @@ import java.util.Queue;
  */
 public class ModuleIOTalonFX implements ModuleIO {
   private final TalonFX driveTalon;
+  private final TalonFXConfiguration driveConfig;
   private final TalonFX turnTalon;
+  private final TalonFXConfiguration turnConfig;
   private final CANcoder cancoder;
 
   private final Queue<Double> timestampQueue;
@@ -69,9 +70,13 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final double TURN_GEAR_RATIO = 150.0 / 7.0;
 
   private boolean isTurnMotorInverted;
+  private boolean isDriveMotorInverted;
   private final Rotation2d absoluteEncoderOffset;
 
   public ModuleIOTalonFX(int index) {
+    driveConfig = new TalonFXConfiguration();
+    turnConfig = new TalonFXConfiguration();
+
     switch (index) {
       case 0:
         driveTalon = new TalonFX(0);
@@ -79,6 +84,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         cancoder = new CANcoder(2);
         absoluteEncoderOffset = Rotation2d.fromDegrees(-57.063281); // MUST BE CALIBRATED
         isTurnMotorInverted = true;
+        isDriveMotorInverted = true;
         break;
       case 1:
         driveTalon = new TalonFX(3);
@@ -86,6 +92,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         cancoder = new CANcoder(5);
         absoluteEncoderOffset = Rotation2d.fromDegrees(34.536328); // MUST BE CALIBRATED
         isTurnMotorInverted = false;
+        isDriveMotorInverted = true;
         break;
       case 2:
         driveTalon = new TalonFX(6);
@@ -93,6 +100,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         cancoder = new CANcoder(8);
         absoluteEncoderOffset = Rotation2d.fromDegrees(138.557812 - 180); // MUST BE CALIBRATED
         isTurnMotorInverted = true;
+        isDriveMotorInverted = true;
         break;
       case 3:
         driveTalon = new TalonFX(9);
@@ -100,22 +108,24 @@ public class ModuleIOTalonFX implements ModuleIO {
         cancoder = new CANcoder(11);
         absoluteEncoderOffset = Rotation2d.fromDegrees(-4.008984); // MUST BE CALIBRATED
         isTurnMotorInverted = true;
+        isDriveMotorInverted = true;
         break;
         default:
         throw new RuntimeException("Invalid module index");
       }
       
-      var driveConfig = new TalonFXConfiguration();
       driveConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
       driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
       driveTalon.getConfigurator().apply(driveConfig);
       setDriveBrakeMode(true);
       
-      var turnConfig = new TalonFXConfiguration();
       turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
       turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    // set invert to CW+ and apply config change
+    turnConfig.MotorOutput.Inverted = isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     turnTalon.getConfigurator().apply(turnConfig);
-    turnTalon.setInverted(isTurnMotorInverted);
+    //turnTalon.setInverted(isTurnMotorInverted);
     setTurnBrakeMode(true);
 
     cancoder.getConfigurator().apply(new CANcoderConfiguration());
@@ -209,7 +219,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
   @Override
   public void setDriveBrakeMode(boolean enable) {
-    driveTalon.setInverted(true);
+    driveConfig.MotorOutput.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     driveTalon.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 

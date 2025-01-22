@@ -13,10 +13,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,6 +30,7 @@ import edu.wpi.first.math.numbers.N3;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+
 public final class Constants {
   public static final Mode currentMode = Mode.REAL;
 
@@ -50,11 +55,21 @@ public final class Constants {
   }
 
   public class DriveConstants {
+    /** m/s */
+    public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
+    public static final double TRACK_WIDTH_Y = 0.581;
+    public static final double TRACK_WIDTH_X = 0.9135;
+    public static final double DRIVE_BASE_RADIUS =
+      Math.hypot(DriveConstants.TRACK_WIDTH_X / 2.0, DriveConstants.TRACK_WIDTH_Y / 2.0);
+    public static final double MAX_ANGULAR_SPEED =  DriveConstants.MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
+    public static final PIDConstants ROTATION_PID_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
+
   }
 
   public class VisionConstants {
-
-    //measurements for transform3d
+    // Measurements for Transform3D
     public final class cameraFront { // 0.41 meters from the center backwards, 0.0 meters to the right, 0.2 meters up, 0.0 radians pitch, 0.0 radians roll, and pi radians/180 degreees yaw
         public static final double x = 0;
         public static final double y = 0;
@@ -75,5 +90,43 @@ public final class Constants {
     public final class PoseEstimatorConstants {
         public static final Matrix<N3, N1> stateStdDevs = new Matrix<>(Nat.N3(), Nat.N1(), new double[]{0.1, 0.1, 0.1});
     }
+  }
+
+  public class ModuleConstants {
+    public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
+    public static final double ODOMETRY_FREQUENCY = 250.0;
+  }
+
+  public class ModuleIOMotorConstants {
+    // Gear ratios for SDS MK4i L2, adjust as necessary
+    public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+    public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
+
+    // MUST BE CALIBRATED
+    public static final Rotation2d[] ABSOLUTE_ENCODER_OFFSETS = {Rotation2d.fromDegrees(-58.291406),
+                                                                 Rotation2d.fromDegrees(33.176953),
+                                                                 Rotation2d.fromDegrees(48.287109),
+                                                                 Rotation2d.fromDegrees(84.678516)};
+    
+    public static final int[] driveTalonID = {0, 3, 6, 9};
+    public static final int[] turnTalonID = {1, 4, 7, 10};
+    public static final int[] CANcoderID = {2, 5, 8, 11};
+
+    // MUST BE CALIBRATED
+    public static final Boolean[] isTurnMotorInverted = {true, true, true, true};
+    public static final Boolean[] isDriveMotorInverted = {true, false, false, true};
+
+    public static final double TURN_SUPPLY_CURRENT_LIMIT = 30;
+    public static final double DRIVE_SUPPLY_CURRENT_LIMIT = 40;
+
+    public static final Boolean TURN_SUPPLY_CURRENT_ENABLE = true;
+    public static final Boolean DRIVE_SUPPLY_CURRENT_ENABLE = true;
+
+    public static final Boolean TURN_BRAKE_MODE = true;
+    public static final Boolean DRIVE_BRAKE_MODE = true;
+  }
+
+  public class DriveCommandsConstants {
+    public static final double DEADBAND = 0.1;
   }
 }

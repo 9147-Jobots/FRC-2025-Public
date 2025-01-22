@@ -13,6 +13,8 @@
 
 package frc.robot.subsystems.drive;
 
+import frc.robot.Constants.ModuleConstants;
+
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -51,7 +53,7 @@ public class SparkMaxOdometryThread {
 
   public void start() {
     if (timestampQueues.size() > 0) {
-      notifier.startPeriodic(1.0 / Module.ODOMETRY_FREQUENCY);
+      notifier.startPeriodic(1.0 / ModuleConstants.ODOMETRY_FREQUENCY);
     }
   }
 

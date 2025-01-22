@@ -4,13 +4,14 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.VisionConstants;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import frc.robot.Constants.VisionConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -42,6 +43,7 @@ public class Vision extends SubsystemBase {
     //creating a new photon camera
     cameraFront = new PhotonCamera("Front");
     cameraBack = new PhotonCamera("Back");
+    
     //updating the camera
     lastResultFront = cameraFront.getLatestResult();
     lastResultBack = cameraBack.getLatestResult();

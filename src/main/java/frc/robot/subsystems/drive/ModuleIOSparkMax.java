@@ -13,6 +13,9 @@
 
 package frc.robot.subsystems.drive;
 
+import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.ModuleIOMotorConstants;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -21,10 +24,12 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+
 import java.util.OptionalDouble;
 import java.util.Queue;
 
@@ -41,10 +46,6 @@ import java.util.Queue;
  * "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
 public class ModuleIOSparkMax implements ModuleIO {
-  // Gear ratios for SDS MK4i L2, adjust as necessary
-  private static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
-  private static final double TURN_GEAR_RATIO = 150.0 / 7.0;
-
   private final SparkMax driveSparkMax;
   private final SparkMaxConfig driveSparkConfig = new SparkMaxConfig();
 
@@ -103,11 +104,11 @@ public class ModuleIOSparkMax implements ModuleIO {
     turnSparkConfig.inverted(isTurnMotorInverted);
     turnSparkConfig.smartCurrentLimit(40);
     turnSparkConfig.voltageCompensation(12.0);
-    turnSparkConfig.signals.primaryEncoderPositionPeriodMs((int) (1000.0 / Module.ODOMETRY_FREQUENCY));
+    turnSparkConfig.signals.primaryEncoderPositionPeriodMs((int) (1000.0 / ModuleConstants.ODOMETRY_FREQUENCY));
 
     driveSparkConfig.smartCurrentLimit(30);
     driveSparkConfig.voltageCompensation(12.0);
-    driveSparkConfig.signals.primaryEncoderVelocityPeriodMs((int) (1000.0 / Module.ODOMETRY_FREQUENCY));
+    driveSparkConfig.signals.primaryEncoderVelocityPeriodMs((int) (1000.0 / ModuleConstants.ODOMETRY_FREQUENCY));
 
     turnSparkMax.configure(turnSparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     driveSparkMax.configure(driveSparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -146,9 +147,9 @@ public class ModuleIOSparkMax implements ModuleIO {
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
     inputs.drivePositionRad =
-        Units.rotationsToRadians(driveEncoder.getPosition()) / DRIVE_GEAR_RATIO;
+        Units.rotationsToRadians(driveEncoder.getPosition()) / ModuleIOMotorConstants.DRIVE_GEAR_RATIO;
     inputs.driveVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(driveEncoder.getVelocity()) / DRIVE_GEAR_RATIO;
+        Units.rotationsPerMinuteToRadiansPerSecond(driveEncoder.getVelocity()) / ModuleIOMotorConstants.DRIVE_GEAR_RATIO;
     inputs.driveAppliedVolts = driveSparkMax.getAppliedOutput() * driveSparkMax.getBusVoltage();
     inputs.driveCurrentAmps = new double[] {driveSparkMax.getOutputCurrent()};
 
@@ -157,10 +158,10 @@ public class ModuleIOSparkMax implements ModuleIO {
                 turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V() * 2.0 * Math.PI)
             .minus(absoluteEncoderOffset);
     inputs.turnPosition =
-        Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
+        Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / ModuleIOMotorConstants.TURN_GEAR_RATIO);
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-            / TURN_GEAR_RATIO;
+            / ModuleIOMotorConstants.TURN_GEAR_RATIO;
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
     inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
 
@@ -168,11 +169,11 @@ public class ModuleIOSparkMax implements ModuleIO {
         timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
     inputs.odometryDrivePositionsRad =
         drivePositionQueue.stream()
-            .mapToDouble((Double value) -> Units.rotationsToRadians(value) / DRIVE_GEAR_RATIO)
+            .mapToDouble((Double value) -> Units.rotationsToRadians(value) / ModuleIOMotorConstants.DRIVE_GEAR_RATIO)
             .toArray();
     inputs.odometryTurnPositions =
         turnPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromRotations(value / TURN_GEAR_RATIO))
+            .map((Double value) -> Rotation2d.fromRotations(value / ModuleIOMotorConstants.TURN_GEAR_RATIO))
             .toArray(Rotation2d[]::new);
     timestampQueue.clear();
     drivePositionQueue.clear();

@@ -15,7 +15,7 @@ package frc.robot.subsystems.drive;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
-
+import frc.robot.logging.ModuleIOInputsAutoLogged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;

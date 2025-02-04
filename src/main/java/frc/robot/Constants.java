@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -43,15 +44,6 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
-  }
-
-  public static final class MechanismConstants {
-    public static final int intakeMotorID = 18;
-    public static final int triggerMotorID = 17;
-    
-    public static final double intakeMotorSpeed = 0.2;
-    public static final double triggerMotorSpeed = 0.2;
-
   }
 
   public class DriveConstants {
@@ -97,7 +89,7 @@ public final class Constants {
     public static final double ODOMETRY_FREQUENCY = 250.0;
   }
 
-  public class ModuleIOMotorConstants {
+  public class ModuleIODriveConstants {
     // Gear ratios for SDS MK4i L2, adjust as necessary
     public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
     public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
@@ -128,5 +120,53 @@ public final class Constants {
 
   public class DriveCommandsConstants {
     public static final double DEADBAND = 0.1;
+  }
+
+  public class ElevatorConstants {
+    public static final int[] CONTROLLER_ID = {0, 1};
+    public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushed};
+
+    public static final int[] CAN_TIMEOUT = {250, 250};
+    public static final Boolean[] INVERTED = {false, false};
+    public static final double[] VOLTAGE_COMPENSATION = {12.0, 12.0};
+    public static final int[] SMART_CURRENT_LIMIT = {30, 30};
+
+    public static final double[][] PID_MODES = {{1, 0, 0}, // REPLAY
+                                                {0.5, 0, 0}}; // SIM
+
+    public static final double[][] FEED_FORWARD_VALUES = {{0.1, 0.05}, // REPLAY
+                                                          {0.0, 0.03}, // SIM
+                                                          {0, 0}}; // DEFAULT
+  }
+
+  public class MechanismConstants {
+    public static final int[] CONTROLLER_ID = {0, 1, 2};
+    public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushed, MotorType.kBrushed};
+
+    public static final int CORAL_CAN_TIMEOUT = 250;
+    public static final int ALGAE_CAN_TIMEOUT = 250;
+    public static final int PIVOT_CAN_TIMEOUT = 250;
+
+    public static final Boolean CORAL_INVERTED = false;
+    public static final Boolean ALGAE_INVERTED = false;
+    public static final Boolean PIVOT_INVERTED = false;
+
+    public static final double CORAL_VOLTAGE_COMPENSATION = 12.0;
+    public static final double ALGAE_VOLTAGE_COMPENSATION = 12.0;
+    public static final double PIVOT_VOLTAGE_COMPENSATION = 12.0;
+
+    public static final int CORAL_SMART_CURRENT_LIMIT = 30;
+    public static final int ALGAE_SMART_CURRENT_LIMIT = 30;
+    public static final int PIVOT_SMART_CURRENT_LIMIT = 30;
+
+    public static final double[][] ALGAE_PID_MODES = {{1, 0, 0}, // REPLAY
+                                                      {0.5, 0, 0}}; // SIM
+    
+    public static final double[][] CORAL_PID_MODES = {{1, 0, 0}, // REPLAY
+                                                      {0.5, 0, 0}}; // SIM
+
+    public static final double[][] FEED_FORWARD_VALUES = {{0.1, 0.05}, // REPLAY
+                                                          {0.0, 0.03}, // SIM
+                                                          {0, 0}}; // DEFAULT
   }
 }

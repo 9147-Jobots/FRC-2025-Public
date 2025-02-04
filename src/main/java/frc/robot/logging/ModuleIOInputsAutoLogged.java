@@ -1,10 +1,12 @@
-package frc.robot.subsystems.drive;
+package frc.robot.logging;
 
 import java.lang.Cloneable;
 import java.lang.Override;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
+
+import frc.robot.subsystems.drive.ModuleIO;
 
 public class ModuleIOInputsAutoLogged extends ModuleIO.ModuleIOInputs implements LoggableInputs, Cloneable {
   @Override

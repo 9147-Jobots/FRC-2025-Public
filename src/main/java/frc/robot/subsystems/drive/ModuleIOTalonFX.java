@@ -14,7 +14,7 @@
 package frc.robot.subsystems.drive;
 
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.Constants.ModuleIOMotorConstants;
+import frc.robot.Constants.ModuleIODriveConstants;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -80,25 +80,25 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     driveConfig = new TalonFXConfiguration();
     turnConfig = new TalonFXConfiguration();
-    driveTalon = new TalonFX(ModuleIOMotorConstants.driveTalonID[index]);
-    turnTalon = new TalonFX(ModuleIOMotorConstants.turnTalonID[index]);
-    cancoder = new CANcoder(ModuleIOMotorConstants.CANcoderID[index]);
-    absoluteEncoderOffset = ModuleIOMotorConstants.ABSOLUTE_ENCODER_OFFSETS[index];
-    isTurnMotorInverted = ModuleIOMotorConstants.isTurnMotorInverted[index];
-    isDriveMotorInverted = ModuleIOMotorConstants.isDriveMotorInverted[index];
+    driveTalon = new TalonFX(ModuleIODriveConstants.driveTalonID[index]);
+    turnTalon = new TalonFX(ModuleIODriveConstants.turnTalonID[index]);
+    cancoder = new CANcoder(ModuleIODriveConstants.CANcoderID[index]);
+    absoluteEncoderOffset = ModuleIODriveConstants.ABSOLUTE_ENCODER_OFFSETS[index];
+    isTurnMotorInverted = ModuleIODriveConstants.isTurnMotorInverted[index];
+    isDriveMotorInverted = ModuleIODriveConstants.isDriveMotorInverted[index];
       
-    driveConfig.CurrentLimits.SupplyCurrentLimit = ModuleIOMotorConstants.DRIVE_SUPPLY_CURRENT_LIMIT;
-    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = ModuleIOMotorConstants.DRIVE_SUPPLY_CURRENT_ENABLE;
+    driveConfig.CurrentLimits.SupplyCurrentLimit = ModuleIODriveConstants.DRIVE_SUPPLY_CURRENT_LIMIT;
+    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = ModuleIODriveConstants.DRIVE_SUPPLY_CURRENT_ENABLE;
     driveConfig.MotorOutput.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     driveTalon.getConfigurator().apply(driveConfig);
-    setDriveBrakeMode(ModuleIOMotorConstants.DRIVE_BRAKE_MODE);
+    setDriveBrakeMode(ModuleIODriveConstants.DRIVE_BRAKE_MODE);
       
-    turnConfig.CurrentLimits.SupplyCurrentLimit = ModuleIOMotorConstants.TURN_SUPPLY_CURRENT_LIMIT;
-    turnConfig.CurrentLimits.SupplyCurrentLimitEnable = ModuleIOMotorConstants.TURN_SUPPLY_CURRENT_ENABLE;
+    turnConfig.CurrentLimits.SupplyCurrentLimit = ModuleIODriveConstants.TURN_SUPPLY_CURRENT_LIMIT;
+    turnConfig.CurrentLimits.SupplyCurrentLimitEnable = ModuleIODriveConstants.TURN_SUPPLY_CURRENT_ENABLE;
     turnConfig.MotorOutput.Inverted = isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     turnTalon.getConfigurator().apply(turnConfig);
 
-    setTurnBrakeMode(ModuleIOMotorConstants.TURN_BRAKE_MODE);
+    setTurnBrakeMode(ModuleIODriveConstants.TURN_BRAKE_MODE);
 
     cancoder.getConfigurator().apply(new CANcoderConfiguration());
 
@@ -147,8 +147,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         turnAppliedVolts,
         turnCurrent);
 
-    inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / ModuleIOMotorConstants.DRIVE_GEAR_RATIO;
-    inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / ModuleIOMotorConstants.DRIVE_GEAR_RATIO;
+    inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / ModuleIODriveConstants.DRIVE_GEAR_RATIO;
+    inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / ModuleIODriveConstants.DRIVE_GEAR_RATIO;
     inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
     inputs.driveCurrentAmps = new double[] {driveCurrent.getValueAsDouble()};
 
@@ -156,18 +156,18 @@ public class ModuleIOTalonFX implements ModuleIO {
         Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble())
             .minus(absoluteEncoderOffset);
     inputs.turnPosition =
-        Rotation2d.fromRotations(turnPosition.getValueAsDouble() / ModuleIOMotorConstants.TURN_GEAR_RATIO);
+        Rotation2d.fromRotations(turnPosition.getValueAsDouble() / ModuleIODriveConstants.TURN_GEAR_RATIO);
     inputs.turnVelocityRadPerSec =
-        Units.rotationsToRadians(turnVelocity.getValueAsDouble()) / ModuleIOMotorConstants.TURN_GEAR_RATIO;
+        Units.rotationsToRadians(turnVelocity.getValueAsDouble()) / ModuleIODriveConstants.TURN_GEAR_RATIO;
     inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
     inputs.turnCurrentAmps = new double[] {turnCurrent.getValueAsDouble()};
 
     inputs.odometryTimestamps = timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
     inputs.odometryDrivePositionsRad = drivePositionQueue.stream()
-            .mapToDouble((Double value) -> Units.rotationsToRadians(value) / ModuleIOMotorConstants.DRIVE_GEAR_RATIO)
+            .mapToDouble((Double value) -> Units.rotationsToRadians(value) / ModuleIODriveConstants.DRIVE_GEAR_RATIO)
             .toArray();
     inputs.odometryTurnPositions = turnPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromRotations(value / ModuleIOMotorConstants.TURN_GEAR_RATIO))
+            .map((Double value) -> Rotation2d.fromRotations(value / ModuleIODriveConstants.TURN_GEAR_RATIO))
             .toArray(Rotation2d[]::new);
     timestampQueue.clear();
     drivePositionQueue.clear();

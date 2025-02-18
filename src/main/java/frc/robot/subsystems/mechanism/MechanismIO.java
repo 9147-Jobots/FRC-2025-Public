@@ -35,16 +35,6 @@ public interface MechanismIO {
     public double pivotCurrentAmps = 0;
 
   }
-
-  /** Configures the PID of the configs */
-  public default void coralConfigurePID(double kP, double kI, double kD) {}
-
-  /** Configures the PID of the configs */
-  public default void algaeConfigurePID(double kP, double kI, double kD) {}
-
-  /** Configures the PID of the configs */
-  public default void pivotConfigurePID(double kP, double kI, double kD) {}
-
   /** Updates the set of loggable inputs. */
   public default void updateInputs(MechanismIOInputs inputs) {}
 
@@ -58,12 +48,18 @@ public interface MechanismIO {
   public default void pivotSetVoltage(double volts) {}
 
   /** Run closed loop at the specified velocity. */
+  public default void coralSetVelocity(double targetPosition, double ffVolts) {}
+
+  /** Run closed loop at the specified velocity. */
+  public default void algaeSetVelocity(double targetPosition, double ffVolts) {}
+
+  /** Run closed loop at the specified position. */
   public default void coralSetPosition(double targetPosition, double ffVolts) {}
 
-  /** Run closed loop at the specified velocity. */
+  /** Run closed loop at the specified position. */
   public default void algaeSetPosition(double targetPosition, double ffVolts) {}
 
-  /** Run closed loop at the specified velocity. */
+  /** Run closed loop at the specified position. */
   public default void pivotSetPosition(double targetPosition, double ffVolts) {}
 
   /** Stop in open loop. */

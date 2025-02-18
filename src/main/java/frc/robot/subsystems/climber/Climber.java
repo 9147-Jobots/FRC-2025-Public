@@ -11,49 +11,49 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.climber;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.logging.ElevatorIOInputsAutoLogged;
+import frc.robot.Constants.ClimberConstants;
+import frc.robot.logging.ClimberIOInputsAutoLogged;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class Elevator extends SubsystemBase {
-  private final ElevatorIO io;
-  private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+public class Climber extends SubsystemBase {
+  private final ClimberIO io;
+  private final ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
   private final SimpleMotorFeedforward ffModel;
 
   /** Creates a new Elevator. */
-  public Elevator(ElevatorIO io) {
+  public Climber(ClimberIO io) {
     this.io = io;
 
     // Switch constants based on mode (the physics simulator is treated as a
     // separate robot with different tuning)
     switch (Constants.currentMode) {
       case REAL:
-        ffModel = new SimpleMotorFeedforward(ElevatorConstants.FEED_FORWARD_VALUES[0][0], 
-                                             ElevatorConstants.FEED_FORWARD_VALUES[0][1]);
+        ffModel = new SimpleMotorFeedforward(ClimberConstants.FEED_FORWARD_VALUES[0][0], 
+                                             ClimberConstants.FEED_FORWARD_VALUES[0][1]);
         break;
 
       case REPLAY:
-        ffModel = new SimpleMotorFeedforward(ElevatorConstants.FEED_FORWARD_VALUES[1][0], 
-                                             ElevatorConstants.FEED_FORWARD_VALUES[1][1]);
+        ffModel = new SimpleMotorFeedforward(ClimberConstants.FEED_FORWARD_VALUES[1][0], 
+                                             ClimberConstants.FEED_FORWARD_VALUES[1][1]);
         break;
 
       case SIM:
-        ffModel = new SimpleMotorFeedforward(ElevatorConstants.FEED_FORWARD_VALUES[2][0], 
-                                             ElevatorConstants.FEED_FORWARD_VALUES[2][1]);
+        ffModel = new SimpleMotorFeedforward(ClimberConstants.FEED_FORWARD_VALUES[2][0], 
+                                             ClimberConstants.FEED_FORWARD_VALUES[2][1]);
         break;
         
       default:
-        ffModel = new SimpleMotorFeedforward(ElevatorConstants.FEED_FORWARD_VALUES[3][0], 
-                                             ElevatorConstants.FEED_FORWARD_VALUES[3][1]);
+        ffModel = new SimpleMotorFeedforward(ClimberConstants.FEED_FORWARD_VALUES[3][0], 
+                                             ClimberConstants.FEED_FORWARD_VALUES[3][1]);
         break;
     }
   }
@@ -61,7 +61,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Elevator", inputs);
+    Logger.processInputs("Climber", inputs);
     io.periodic();
   }
 
@@ -69,11 +69,11 @@ public class Elevator extends SubsystemBase {
   public void runPosition(double position) {
     io.setPosition(position, ffModel.calculate(position));
 
-    // Log elevator setpoint
-    Logger.recordOutput("Elevator/Setpoint", position);
+    // Log climber setpoint
+    Logger.recordOutput("Climber/Setpoint", position);
   }
 
-  /** Stops the elevator. */
+  /** Stops the climber. */
   public void stop() {
     io.stop();
   }

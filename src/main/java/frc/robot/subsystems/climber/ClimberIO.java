@@ -11,13 +11,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.climber;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ElevatorIO {
+public interface ClimberIO {
   @AutoLog
-  public static class ElevatorIOInputs {
+  public static class ClimberIOInputs {
     public double[] positionRad = {0, 0};
     public double[] velocityRadPerSec = {0, 0};
     public double[] appliedVolts = {0, 0};
@@ -26,7 +26,7 @@ public interface ElevatorIO {
 
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(ElevatorIOInputs inputs) {}
+  public default void updateInputs(ClimberIOInputs inputs) {}
 
   /** Run closed loop at the specified velocity. */
   public default void setPosition(double targetPosition, double ffVolts) {}

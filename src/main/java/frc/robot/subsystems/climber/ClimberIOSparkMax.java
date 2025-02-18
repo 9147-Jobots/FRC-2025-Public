@@ -11,17 +11,16 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.climber;
 
 import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.ClimberConstants;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -33,9 +32,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * NOTE: To use the Spark Flex / NEO Vortex, replace all instances of "CANSparkMax" with
  * "CANSparkFlex".
  */
-public class ElevatorIOSparkMax implements ElevatorIO {
-  private final SparkMax[] controllers = {new SparkMax(ElevatorConstants.CONTROLLER_ID[0], ElevatorConstants.MOTOR_TYPE[0]),
-                                          new SparkMax(ElevatorConstants.CONTROLLER_ID[1], ElevatorConstants.MOTOR_TYPE[1])};
+public class ClimberIOSparkMax implements ClimberIO {
+  private final SparkMax[] controllers = {new SparkMax(ClimberConstants.CONTROLLER_ID[0], ClimberConstants.MOTOR_TYPE[0]),
+                                          new SparkMax(ClimberConstants.CONTROLLER_ID[1], ClimberConstants.MOTOR_TYPE[1])};
 
   // MUST have same length as controllers
   private final SparkMaxConfig[] configs = {new SparkMaxConfig(),
@@ -47,7 +46,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
   private final SparkClosedLoopController[] pids = {controllers[0].getClosedLoopController(),
                                                     controllers[1].getClosedLoopController()};
 
-  public ElevatorIOSparkMax() {
+  public ClimberIOSparkMax() {
     int pid_index;
 
     switch (Constants.currentMode) {
@@ -69,23 +68,21 @@ public class ElevatorIOSparkMax implements ElevatorIO {
     }
 
     for (int index = 0; index < controllers.length; index++) {
-      controllers[index].setCANTimeout(ElevatorConstants.CAN_TIMEOUT[index]);
+      controllers[index].setCANTimeout(ClimberConstants.CAN_TIMEOUT[index]);
       
       configs[index]
-        .inverted(ElevatorConstants.INVERTED[index])
-        .voltageCompensation(ElevatorConstants.VOLTAGE_COMPENSATION[index])
-        .smartCurrentLimit(ElevatorConstants.SMART_CURRENT_LIMIT[index])
-        .idleMode(IdleMode.kBrake)
-        .encoder.positionConversionFactor(ElevatorConstants.CONVERSION_FACTOR);
+        .inverted(ClimberConstants.INVERTED[index])
+        .voltageCompensation(ClimberConstants.VOLTAGE_COMPENSATION[index])
+        .smartCurrentLimit(ClimberConstants.SMART_CURRENT_LIMIT[index])
+        .encoder.positionConversionFactor(ClimberConstants.CONVERSION_FACTOR);
       
       configs[index].closedLoop
                          .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                         .pid(ElevatorConstants.PID_MODES[pid_index][0],
-                              ElevatorConstants.PID_MODES[pid_index][1],
-                              ElevatorConstants.PID_MODES[pid_index][2])
-
-                         .maxMotion.maxVelocity(ElevatorConstants.MAX_VELOCITY)
-                                   .maxAcceleration(ElevatorConstants.MAX_ACCELERATION)
+                         .pid(ClimberConstants.PID_MODES[pid_index][0],
+                              ClimberConstants.PID_MODES[pid_index][1],
+                              ClimberConstants.PID_MODES[pid_index][2])
+                         .maxMotion.maxVelocity(ClimberConstants.MAX_VELOCITY)
+                                   .maxAcceleration(ClimberConstants.MAX_ACCELERATION)
                                    .allowedClosedLoopError(1);
       
 
@@ -94,7 +91,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
   }
 
   @Override
-  public void updateInputs(ElevatorIOInputs inputs) {
+  public void updateInputs(ClimberIOInputs inputs) {
     inputs.positionRad = new double[] {Units.rotationsToRadians(encoders[0].getPosition()), 
                                        Units.rotationsToRadians(encoders[1].getPosition())};
 
@@ -112,7 +109,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
   public void setPosition(double targetPosition, double ffVolts) {
     pids[0].setReference(targetPosition, ControlType.kMAXMotionPositionControl);
     pids[1].setReference(targetPosition, ControlType.kMAXMotionPositionControl);
-    SmartDashboard.putNumber("Elevator set point", targetPosition);
+    SmartDashboard.putNumber("Climber set point", targetPosition);
   }
 
   @Override
@@ -123,7 +120,5 @@ public class ElevatorIOSparkMax implements ElevatorIO {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Left elevator position", encoders[0].getPosition());
-    SmartDashboard.putNumber("Right elevator position", encoders[1].getPosition());
   }
 }

@@ -47,6 +47,11 @@ public final class Constants {
   }
 
   public class DriveConstants {
+    // Input constants
+    public static final double X_IN = 0.25;
+    public static final double Y_IN = 0.25;
+    public static final double OMEGA_IN = 0.25;
+
     /** m/s */
     public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
     public static final double TRACK_WIDTH_Y = 0.581;
@@ -123,18 +128,47 @@ public final class Constants {
   }
 
   public class ElevatorConstants {
-    public static final int[] CONTROLLER_ID = {0, 1};
-    public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushed};
+    public static final int[] CONTROLLER_ID = {12, 13};
+    public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushless};
 
     public static final int[] CAN_TIMEOUT = {250, 250};
-    public static final Boolean[] INVERTED = {false, false};
+    public static final Boolean[] INVERTED = {false, true};
     public static final double[] VOLTAGE_COMPENSATION = {12.0, 12.0};
-    public static final int[] SMART_CURRENT_LIMIT = {30, 30};
+    public static final int[] SMART_CURRENT_LIMIT = {10, 10};
+    public static final int MAX_VELOCITY = 5000;
+    public static final int MAX_ACCELERATION = 5000;
+    public static final float CONVERSION_FACTOR = 1;
 
-    public static final double[][] PID_MODES = {{1, 0, 0}, // REPLAY
-                                                {0.5, 0, 0}}; // SIM
+    public static final double[][] PID_MODES = {{5, 0, 0}, // REAL
+                                                {2, 0.5, 0}, // REPLAY
+                                                {2, 0.5, 0}, // SIM
+                                                {2, 0.5, 0}}; // DEFAULT
 
-    public static final double[][] FEED_FORWARD_VALUES = {{0.1, 0.05}, // REPLAY
+    public static final double[][] FEED_FORWARD_VALUES = {{1, 0, 0}, // REAL
+                                                          {0.1, 0.05}, // REPLAY
+                                                          {0.0, 0.03}, // SIM
+                                                          {0, 0}}; // DEFAULT
+  }
+
+  public class ClimberConstants {
+    public static final int[] CONTROLLER_ID = {12, 13};
+    public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushless};
+
+    public static final int[] CAN_TIMEOUT = {250, 250};
+    public static final Boolean[] INVERTED = {false, true};
+    public static final double[] VOLTAGE_COMPENSATION = {12.0, 12.0};
+    public static final int[] SMART_CURRENT_LIMIT = {10, 10};
+    public static final int MAX_VELOCITY = 5000;
+    public static final int MAX_ACCELERATION = 5000;
+    public static final float CONVERSION_FACTOR = 1;
+
+    public static final double[][] PID_MODES = {{5, 0, 0}, // REAL
+                                                {2, 0.5, 0}, // REPLAY
+                                                {2, 0.5, 0}, // SIM
+                                                {2, 0.5, 0}}; // DEFAULT
+
+    public static final double[][] FEED_FORWARD_VALUES = {{1, 0, 0}, // REAL
+                                                          {0.1, 0.05}, // REPLAY
                                                           {0.0, 0.03}, // SIM
                                                           {0, 0}}; // DEFAULT
   }
@@ -159,13 +193,23 @@ public final class Constants {
     public static final int ALGAE_SMART_CURRENT_LIMIT = 30;
     public static final int PIVOT_SMART_CURRENT_LIMIT = 30;
 
-    public static final double[][] ALGAE_PID_MODES = {{1, 0, 0}, // REPLAY
-                                                      {0.5, 0, 0}}; // SIM
+    public static final double[][] CORAL_PID_MODES = {{1, 0, 0}, // REAL
+                                                      {1, 0, 0}, // REPLAY
+                                                      {0.5, 0, 0}, // SIM
+                                                      {0.5, 0, 0}}; // DEFAULT
     
-    public static final double[][] CORAL_PID_MODES = {{1, 0, 0}, // REPLAY
-                                                      {0.5, 0, 0}}; // SIM
+    public static final double[][] ALGAE_PID_MODES = {{1, 0, 0}, // REAL
+                                                      {1, 0, 0}, // REPLAY
+                                                      {0.5, 0, 0}, // SIM
+                                                      {0.5, 0, 0}}; // DEFAULT
 
-    public static final double[][] FEED_FORWARD_VALUES = {{0.1, 0.05}, // REPLAY
+    public static final double[][] PIVOT_PID_MODES = {{1, 0, 0}, // REAL
+                                                      {1, 0, 0}, // REPLAY
+                                                      {0.5, 0, 0}, // SIM
+                                                      {1, 0, 0}}; // DEFAULT
+
+    public static final double[][] FEED_FORWARD_VALUES = {{1, 0, 0}, // REAL
+                                                          {0.1, 0.05}, // REPLAY
                                                           {0.0, 0.03}, // SIM
                                                           {0, 0}}; // DEFAULT
   }

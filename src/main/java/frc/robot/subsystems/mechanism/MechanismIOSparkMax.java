@@ -13,6 +13,7 @@
 
 package frc.robot.subsystems.mechanism;
 
+import frc.robot.Constants;
 import frc.robot.Constants.MechanismConstants;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -47,22 +48,51 @@ public class MechanismIOSparkMax implements MechanismIO {
   private final SparkClosedLoopController pivot_pid = pivot.getClosedLoopController();
   
   public MechanismIOSparkMax() {
+    int pid_index;
+
+    switch (Constants.currentMode) {
+      case REAL:
+        pid_index = 0;
+        break;
+
+      case REPLAY:
+        pid_index = 1;
+        break;
+
+      case SIM:
+        pid_index = 2;
+        break;
+
+      default:
+        pid_index = 3;
+        break;
+    }
+
     coral.setCANTimeout(MechanismConstants.CORAL_CAN_TIMEOUT);
-    coral_config.inverted(MechanismConstants.CORAL_INVERTED);
-    coral_config.voltageCompensation(MechanismConstants.CORAL_VOLTAGE_COMPENSATION);
-    coral_config.smartCurrentLimit(MechanismConstants.CORAL_SMART_CURRENT_LIMIT);
+    coral_config.inverted(MechanismConstants.CORAL_INVERTED)
+                .voltageCompensation(MechanismConstants.CORAL_VOLTAGE_COMPENSATION)
+                .smartCurrentLimit(MechanismConstants.CORAL_SMART_CURRENT_LIMIT)
+                .closedLoop.pid(MechanismConstants.CORAL_PID_MODES[pid_index][0],
+                                MechanismConstants.CORAL_PID_MODES[pid_index][1],
+                                MechanismConstants.CORAL_PID_MODES[pid_index][2]);
     coral.configure(coral_config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     algae.setCANTimeout(MechanismConstants.ALGAE_CAN_TIMEOUT);
-    algae_config.inverted(MechanismConstants.ALGAE_INVERTED);
-    algae_config.voltageCompensation(MechanismConstants.ALGAE_VOLTAGE_COMPENSATION);
-    algae_config.smartCurrentLimit(MechanismConstants.ALGAE_SMART_CURRENT_LIMIT);
+    algae_config.inverted(MechanismConstants.ALGAE_INVERTED)
+                .voltageCompensation(MechanismConstants.ALGAE_VOLTAGE_COMPENSATION)
+                .smartCurrentLimit(MechanismConstants.ALGAE_SMART_CURRENT_LIMIT)
+                .closedLoop.pid(MechanismConstants.ALGAE_PID_MODES[pid_index][0],
+                                MechanismConstants.ALGAE_PID_MODES[pid_index][1],
+                                MechanismConstants.ALGAE_PID_MODES[pid_index][2]);
     algae.configure(algae_config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     pivot.setCANTimeout(MechanismConstants.PIVOT_CAN_TIMEOUT);
-    pivot_config.inverted(MechanismConstants.PIVOT_INVERTED);
-    pivot_config.voltageCompensation(MechanismConstants.PIVOT_VOLTAGE_COMPENSATION);
-    pivot_config.smartCurrentLimit(MechanismConstants.PIVOT_SMART_CURRENT_LIMIT);
+    pivot_config.inverted(MechanismConstants.PIVOT_INVERTED)
+                .voltageCompensation(MechanismConstants.PIVOT_VOLTAGE_COMPENSATION)
+                .smartCurrentLimit(MechanismConstants.PIVOT_SMART_CURRENT_LIMIT)
+                .closedLoop.pid(MechanismConstants.PIVOT_PID_MODES[pid_index][0],
+                                MechanismConstants.PIVOT_PID_MODES[pid_index][1],
+                                MechanismConstants.PIVOT_PID_MODES[pid_index][2]);
     pivot.configure(pivot_config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -101,6 +131,20 @@ public class MechanismIOSparkMax implements MechanismIO {
   }
 
   @Override
+  public void coralSetVelocity(double targetPosition, double ffVolts) {
+    coral_pid.setReference(
+        targetPosition,
+        ControlType.kVelocity);
+  }
+
+  @Override
+  public void algaeSetVelocity(double targetPosition, double ffVolts) {
+    algae_pid.setReference(
+        targetPosition,
+        ControlType.kVelocity);
+  }
+
+  @Override
   public void coralSetPosition(double targetPosition, double ffVolts) {
     coral_pid.setReference(
         targetPosition,
@@ -134,20 +178,5 @@ public class MechanismIOSparkMax implements MechanismIO {
   @Override
   public void pivotStop() {
     pivot.stopMotor();
-  }
-
-  @Override
-  public void coralConfigurePID(double kP, double kI, double kD) {
-    coral_config.closedLoop.pidf(kP, kI, kD, 0);
-  }
-
-  @Override
-  public void algaeConfigurePID(double kP, double kI, double kD) {
-    algae_config.closedLoop.pidf(kP, kI, kD, 0);
-  }
-
-  @Override
-  public void pivotConfigurePID(double kP, double kI, double kD) {
-    pivot_config.closedLoop.pidf(kP, kI, kD, 0);
   }
 }

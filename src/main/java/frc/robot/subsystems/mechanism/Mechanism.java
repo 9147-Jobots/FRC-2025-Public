@@ -43,33 +43,23 @@ public class Mechanism extends SubsystemBase {
     // separate robot with different tuning)
     switch (Constants.currentMode) {
       case REAL:
-      case REPLAY:
         ffModel = new SimpleMotorFeedforward(MechanismConstants.FEED_FORWARD_VALUES[0][0], 
                                              MechanismConstants.FEED_FORWARD_VALUES[0][1]);
-        io.algaeConfigurePID(MechanismConstants.ALGAE_PID_MODES[0][0],
-                            MechanismConstants.ALGAE_PID_MODES[0][1],
-                            MechanismConstants.ALGAE_PID_MODES[0][2]);
-        
-        io.coralConfigurePID(MechanismConstants.CORAL_PID_MODES[0][0],
-                            MechanismConstants.CORAL_PID_MODES[0][1],
-                            MechanismConstants.CORAL_PID_MODES[0][2]);
-
         break;
-      case SIM:
+
+      case REPLAY:
         ffModel = new SimpleMotorFeedforward(MechanismConstants.FEED_FORWARD_VALUES[1][0], 
                                              MechanismConstants.FEED_FORWARD_VALUES[1][1]);
-
-        io.algaeConfigurePID(MechanismConstants.ALGAE_PID_MODES[1][0],
-                             MechanismConstants.ALGAE_PID_MODES[1][1],
-                             MechanismConstants.ALGAE_PID_MODES[1][2]);
-                         
-        io.coralConfigurePID(MechanismConstants.CORAL_PID_MODES[1][0],
-                             MechanismConstants.CORAL_PID_MODES[1][1],
-                             MechanismConstants.CORAL_PID_MODES[1][2]);
         break;
-      default:
+
+      case SIM:
         ffModel = new SimpleMotorFeedforward(MechanismConstants.FEED_FORWARD_VALUES[2][0], 
-                                             MechanismConstants.FEED_FORWARD_VALUES[1][2]);
+                                             MechanismConstants.FEED_FORWARD_VALUES[2][1]);
+        break;
+
+      default:
+        ffModel = new SimpleMotorFeedforward(MechanismConstants.FEED_FORWARD_VALUES[3][0], 
+                                             MechanismConstants.FEED_FORWARD_VALUES[3][1]);
         break;
     }
 
@@ -119,6 +109,22 @@ public class Mechanism extends SubsystemBase {
   /** Run open loop at the specified voltage. */
   public void runPivotVolts(double volts) {
     io.pivotSetVoltage(volts);
+  }
+
+  /** Run closed loop at the specified velocity. */
+  public void algaeRunVelocity(double velocity) {
+    io.algaeSetVelocity(velocity, ffModel.calculate(velocity));
+
+    // Log mechansim setpoint
+    Logger.recordOutput("Mechansim/AlgaeSetVelocity", velocity);
+  }
+
+  /** Run closed loop at the specified velocity. */
+  public void coralRunVelocity(double velocity) {
+    io.coralSetPosition(velocity, ffModel.calculate(velocity));
+
+    // Log mechansim setpoint
+    Logger.recordOutput("Mechansim/CoralSetVelocity", velocity);
   }
 
   /** Run closed loop at the specified velocity. */

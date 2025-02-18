@@ -49,8 +49,9 @@ public class DriveCommands {
             Rotation2d linearDirection =
                 new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
 
-            SmartDashboard.putNumber("X value controller", xSupplier.getAsDouble());
-            SmartDashboard.putNumber("Y value controller", ySupplier.getAsDouble());
+            SmartDashboard.putNumber("Left-Joystick X value", xSupplier.getAsDouble());
+            SmartDashboard.putNumber("Left-Joystick Y value", ySupplier.getAsDouble());
+            SmartDashboard.putNumber("Right-Joystick Y value", ySupplier.getAsDouble());
           
           double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DriveCommandsConstants.DEADBAND);
 

@@ -20,11 +20,13 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIOSparkMax;
+import frc.robot.subsystems.mechanism.Mechanism;
+import frc.robot.subsystems.mechanism.MechanismIOSparkMax;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,6 +47,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Elevator elevator;
+  private final Mechanism mechanism;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -86,6 +90,9 @@ public class RobotContainer {
         break;
     }
 
+    elevator = new Elevator(new ElevatorIOSparkMax() {});
+    mechanism = new Mechanism(new MechanismIOSparkMax() {});
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -119,13 +126,21 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     drive.setDefaultCommand(DriveCommands.joystickDrive(drive,
-                                                        () -> -controller.getLeftY(),
-                                                        () -> -controller.getLeftX(),
-                                                        () -> -controller.getRightX() / 2));
+                                                        () -> -controller.getLeftY() * Constants.DriveConstants.X_IN,
+                                                        () -> -controller.getLeftX() * Constants.DriveConstants.Y_IN,
+                                                        () -> -controller.getRightX() * Constants.DriveConstants.OMEGA_IN));
 
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller.b().onTrue(Commands.runOnce(() -> drive.resetPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())), 
-                                           drive).ignoringDisable(true));
+    controller.start().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    controller.x().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(0)));
+    controller.b().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(10)));
+
+    controller.a().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(0)));
+    controller.y().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(10)));
+
+    controller.povUp().onTrue(Commands.runOnce(() -> elevator.runPosition(64)));
+    controller.povRight().onTrue(Commands.runOnce(() -> elevator.runPosition(33)));
+    controller.povDown().onTrue(Commands.runOnce(() -> elevator.runPosition(1)));
   }
 
   /**

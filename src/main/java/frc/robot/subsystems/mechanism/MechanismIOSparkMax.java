@@ -31,9 +31,9 @@ import edu.wpi.first.math.util.Units;
  * "CANSparkFlex".
  */
 public class MechanismIOSparkMax implements MechanismIO {
-  private final SparkMax coral = new SparkMax(MechanismConstants.CONTROLLER_ID[0], MechanismConstants.MOTOR_TYPE[0]);
-  private final SparkMax algae = new SparkMax(MechanismConstants.CONTROLLER_ID[1], MechanismConstants.MOTOR_TYPE[1]);
-  private final SparkMax pivot = new SparkMax(MechanismConstants.CONTROLLER_ID[2], MechanismConstants.MOTOR_TYPE[2]);
+  private final SparkMax coral = new SparkMax(MechanismConstants.CORAL_ID, MechanismConstants.CORAL_TYPE);
+  private final SparkMax algae = new SparkMax(MechanismConstants.ALGAE_ID, MechanismConstants.ALGAE_TYPE);
+  private final SparkMax pivot = new SparkMax(MechanismConstants.PIVOT_ID, MechanismConstants.PIVOT_TYPE);
 
   private final SparkMaxConfig coral_config = new SparkMaxConfig();
   private final SparkMaxConfig algae_config = new SparkMaxConfig();

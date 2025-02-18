@@ -128,7 +128,7 @@ public final class Constants {
   }
 
   public class ElevatorConstants {
-    public static final int[] CONTROLLER_ID = {12, 13};
+    public static final int[] CONTROLLER_ID = {14, 15};
     public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushless};
 
     public static final int[] CAN_TIMEOUT = {250, 250};
@@ -174,8 +174,13 @@ public final class Constants {
   }
 
   public class MechanismConstants {
-    public static final int[] CONTROLLER_ID = {0, 1, 2};
-    public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushed, MotorType.kBrushed};
+    public static final int CORAL_ID = 16;
+    public static final int ALGAE_ID = 1;
+    public static final int PIVOT_ID = 17;
+    
+    public static final MotorType CORAL_TYPE = MotorType.kBrushless;
+    public static final MotorType ALGAE_TYPE = MotorType.kBrushed;
+    public static final MotorType PIVOT_TYPE = MotorType.kBrushed;
 
     public static final int CORAL_CAN_TIMEOUT = 250;
     public static final int ALGAE_CAN_TIMEOUT = 250;

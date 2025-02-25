@@ -21,10 +21,12 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * NOTE: To use the Spark Flex / NEO Vortex, replace all instances of "CANSparkMax" with
@@ -74,7 +76,8 @@ public class MechanismIOSparkMax implements MechanismIO {
                 .smartCurrentLimit(MechanismConstants.CORAL_SMART_CURRENT_LIMIT)
                 .closedLoop.pid(MechanismConstants.CORAL_PID_MODES[pid_index][0],
                                 MechanismConstants.CORAL_PID_MODES[pid_index][1],
-                                MechanismConstants.CORAL_PID_MODES[pid_index][2]);
+                                MechanismConstants.CORAL_PID_MODES[pid_index][2])
+                            .velocityFF(1/917);
     coral.configure(coral_config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     algae.setCANTimeout(MechanismConstants.ALGAE_CAN_TIMEOUT);
@@ -91,8 +94,12 @@ public class MechanismIOSparkMax implements MechanismIO {
                 .voltageCompensation(MechanismConstants.PIVOT_VOLTAGE_COMPENSATION)
                 .smartCurrentLimit(MechanismConstants.PIVOT_SMART_CURRENT_LIMIT)
                 .closedLoop.pid(MechanismConstants.PIVOT_PID_MODES[pid_index][0],
-                                MechanismConstants.PIVOT_PID_MODES[pid_index][1],
-                                MechanismConstants.PIVOT_PID_MODES[pid_index][2]);
+                              MechanismConstants.PIVOT_PID_MODES[pid_index][1],
+                              MechanismConstants.PIVOT_PID_MODES[pid_index][2])
+                              .maxMotion
+                                .allowedClosedLoopError(MechanismConstants.PIVOT_ALLOWED_CLOSED_LOOP_ERROR)
+                                .maxVelocity(MechanismConstants.PIVOT_MAX_VELOCITY)
+                                .maxAcceleration(MechanismConstants.PIVOT_MAX_ACCELERATION);
     pivot.configure(pivot_config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -162,7 +169,7 @@ public class MechanismIOSparkMax implements MechanismIO {
   public void pivotSetPosition(double targetPosition, double ffVolts) {
     pivot_pid.setReference(
         targetPosition,
-        ControlType.kPosition);
+        ControlType.kMAXMotionPositionControl);
   }
 
   @Override
@@ -178,5 +185,11 @@ public class MechanismIOSparkMax implements MechanismIO {
   @Override
   public void pivotStop() {
     pivot.stopMotor();
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Coral flywheel", coral.getOutputCurrent());
+    SmartDashboard.putNumber("Pivot encoder", pivot_encoder.getPosition());
   }
 }

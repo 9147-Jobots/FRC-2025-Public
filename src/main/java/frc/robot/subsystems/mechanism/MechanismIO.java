@@ -70,4 +70,6 @@ public interface MechanismIO {
 
   /** Stop in open loop. */
   public default void pivotStop() {}
+
+  public default void periodic() {}
 }

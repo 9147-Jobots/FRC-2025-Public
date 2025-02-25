@@ -24,6 +24,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 
 import edu.wpi.first.math.util.Units;
@@ -79,14 +80,13 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         .encoder.positionConversionFactor(ElevatorConstants.CONVERSION_FACTOR);
       
       configs[index].closedLoop
-                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                         .pid(ElevatorConstants.PID_MODES[pid_index][0],
-                              ElevatorConstants.PID_MODES[pid_index][1],
-                              ElevatorConstants.PID_MODES[pid_index][2])
-
-                         .maxMotion.maxVelocity(ElevatorConstants.MAX_VELOCITY)
-                                   .maxAcceleration(ElevatorConstants.MAX_ACCELERATION)
-                                   .allowedClosedLoopError(1);
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .pid(ElevatorConstants.PID_MODES[pid_index][0],
+                          ElevatorConstants.PID_MODES[pid_index][1],
+                          ElevatorConstants.PID_MODES[pid_index][2])
+                        .maxMotion.maxVelocity(ElevatorConstants.MAX_VELOCITY)
+                          .maxAcceleration(ElevatorConstants.MAX_ACCELERATION)
+                          .allowedClosedLoopError(1);
       
 
       controllers[index].configure(configs[index], ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -110,8 +110,8 @@ public class ElevatorIOSparkMax implements ElevatorIO {
 
   @Override
   public void setPosition(double targetPosition, double ffVolts) {
-    pids[0].setReference(targetPosition, ControlType.kMAXMotionPositionControl);
-    pids[1].setReference(targetPosition, ControlType.kMAXMotionPositionControl);
+    pids[0].setReference(targetPosition, ControlType.kMAXMotionPositionControl,  ClosedLoopSlot.kSlot0, 0.2);
+    pids[1].setReference(targetPosition, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.2);
     SmartDashboard.putNumber("Elevator set point", targetPosition);
   }
 

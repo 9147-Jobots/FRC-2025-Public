@@ -17,6 +17,7 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -93,6 +94,7 @@ public class Mechanism extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
+    io.periodic();
     Logger.processInputs("Mechansim", inputs);
   }
 
@@ -121,8 +123,8 @@ public class Mechanism extends SubsystemBase {
 
   /** Run closed loop at the specified velocity. */
   public void coralRunVelocity(double velocity) {
-    io.coralSetPosition(velocity, ffModel.calculate(velocity));
-
+    io.coralSetVelocity(velocity, ffModel.calculate(velocity));
+    SmartDashboard.putNumber("Velocity coral", ffModel.calculate(velocity));
     // Log mechansim setpoint
     Logger.recordOutput("Mechansim/CoralSetVelocity", velocity);
   }

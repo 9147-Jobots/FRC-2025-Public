@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.PresetConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -133,14 +134,16 @@ public class RobotContainer {
     controller.start().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     controller.x().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(0)));
-    controller.b().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(10)));
+    controller.a().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_REST)));
+    controller.b().onTrue(Commands.runOnce(() ->mechanism.pivotRunPosition(PresetConstants.PIVOT_L3_BELOW)));
+    controller.y().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_L4)));
 
-    controller.a().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(0)));
-    controller.y().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(10)));
+    controller.leftBumper().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(-1000)));
+    controller.rightBumper().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(1000)));
 
-    controller.povUp().onTrue(Commands.runOnce(() -> elevator.runPosition(64)));
-    controller.povRight().onTrue(Commands.runOnce(() -> elevator.runPosition(33)));
-    controller.povDown().onTrue(Commands.runOnce(() -> elevator.runPosition(1)));
+    controller.povUp().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L4)));
+    controller.povRight().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L3)));
+    controller.povDown().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L1_L2)));
   }
 
   /**

@@ -228,12 +228,12 @@ public class Drive extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       // The module returns the optimized state, useful for logging
       Module module = modules[i];
+      setpointStates[i].optimize(module.getAngle());
       SwerveModuleState moduleState = setpointStates[i];
       // new function created to manually set the setpoint and angle of each individual module state
       module.setState(moduleState);
 
       SwerveModuleState state = module.getState();
-      state.optimize(module.getAngle());
       optimizedSetpointStates[i] = state;
       SmartDashboard.putNumber("Module " + i + " speed", state.speedMetersPerSecond);
       SmartDashboard.putNumber("Module " + i + " speed", state.angle.getDegrees());

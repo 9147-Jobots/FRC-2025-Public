@@ -46,6 +46,19 @@ public final class Constants {
     REPLAY
   }
 
+  public class PresetConstants {
+    // Elevator presets
+    public static final int ELEVATOR_L1_L2 = 1;
+    public static final int ELEVATOR_L3 = 25;
+    public static final int ELEVATOR_HIGH = 49;
+    public static final int ELEVATOR_L4 = 64;
+
+    // Pivot presets
+    public static final double PIVOT_L4 = -3.785711;
+    public static final double PIVOT_L3_BELOW = -5.642850;
+    public static final double PIVOT_REST = 0;
+  }
+
   public class DriveConstants {
     // Input constants
     public static final double X_IN = 0.25;
@@ -135,16 +148,16 @@ public final class Constants {
     public static final Boolean[] INVERTED = {false, true};
     public static final double[] VOLTAGE_COMPENSATION = {12.0, 12.0};
     public static final int[] SMART_CURRENT_LIMIT = {10, 10};
-    public static final int MAX_VELOCITY = 5000;
-    public static final int MAX_ACCELERATION = 5000;
+    public static final int MAX_VELOCITY = 4000;
+    public static final int MAX_ACCELERATION = 3000;
     public static final float CONVERSION_FACTOR = 1;
 
-    public static final double[][] PID_MODES = {{5, 0, 0}, // REAL
+    public static final double[][] PID_MODES = {{4, 0, 0.1}, // REAL
                                                 {2, 0.5, 0}, // REPLAY
                                                 {2, 0.5, 0}, // SIM
                                                 {2, 0.5, 0}}; // DEFAULT
 
-    public static final double[][] FEED_FORWARD_VALUES = {{1, 0, 0}, // REAL
+    public static final double[][] FEED_FORWARD_VALUES = {{0, 0, 0}, // REAL
                                                           {0.1, 0.05}, // REPLAY
                                                           {0.0, 0.03}, // SIM
                                                           {0, 0}}; // DEFAULT
@@ -177,10 +190,14 @@ public final class Constants {
     public static final int CORAL_ID = 16;
     public static final int ALGAE_ID = 1;
     public static final int PIVOT_ID = 17;
+
+    public static final double PIVOT_MAX_VELOCITY = 1000;
+    public static final double PIVOT_MAX_ACCELERATION = 100;
+    public static final double PIVOT_ALLOWED_CLOSED_LOOP_ERROR = 0.01;
     
     public static final MotorType CORAL_TYPE = MotorType.kBrushless;
-    public static final MotorType ALGAE_TYPE = MotorType.kBrushed;
-    public static final MotorType PIVOT_TYPE = MotorType.kBrushed;
+    public static final MotorType ALGAE_TYPE = MotorType.kBrushless;
+    public static final MotorType PIVOT_TYPE = MotorType.kBrushless;
 
     public static final int CORAL_CAN_TIMEOUT = 250;
     public static final int ALGAE_CAN_TIMEOUT = 250;
@@ -198,7 +215,7 @@ public final class Constants {
     public static final int ALGAE_SMART_CURRENT_LIMIT = 30;
     public static final int PIVOT_SMART_CURRENT_LIMIT = 30;
 
-    public static final double[][] CORAL_PID_MODES = {{1, 0, 0}, // REAL
+    public static final double[][] CORAL_PID_MODES = {{0.00015, 0, 0}, // REAL
                                                       {1, 0, 0}, // REPLAY
                                                       {0.5, 0, 0}, // SIM
                                                       {0.5, 0, 0}}; // DEFAULT
@@ -208,12 +225,12 @@ public final class Constants {
                                                       {0.5, 0, 0}, // SIM
                                                       {0.5, 0, 0}}; // DEFAULT
 
-    public static final double[][] PIVOT_PID_MODES = {{1, 0, 0}, // REAL
+    public static final double[][] PIVOT_PID_MODES = {{0.8, 0.000015, 1.5}, // REAL
                                                       {1, 0, 0}, // REPLAY
                                                       {0.5, 0, 0}, // SIM
                                                       {1, 0, 0}}; // DEFAULT
 
-    public static final double[][] FEED_FORWARD_VALUES = {{1, 0, 0}, // REAL
+    public static final double[][] FEED_FORWARD_VALUES = {{1, 0.5}, // REAL
                                                           {0.1, 0.05}, // REPLAY
                                                           {0.0, 0.03}, // SIM
                                                           {0, 0}}; // DEFAULT

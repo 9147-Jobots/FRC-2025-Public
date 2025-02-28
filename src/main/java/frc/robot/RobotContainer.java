@@ -58,6 +58,8 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
+  private final CommandXboxController controller2 = new CommandXboxController(1);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -138,19 +140,17 @@ public class RobotContainer {
 
     controller.start().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    controller.x().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(0)));
-    controller.a().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_REST)));
-    controller.b().onTrue(Commands.runOnce(() ->mechanism.pivotRunPosition(PresetConstants.PIVOT_Intake)));
-    controller.y().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_L4)));
+    controller2.x().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(0)));
+    controller2.a().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_REST)));
+    controller2.b().onTrue(Commands.runOnce(() ->mechanism.pivotRunPosition(PresetConstants.PIVOT_Intake)));
+    controller2.y().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_L4)));
 
-    controller.leftBumper().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(-1000)));
-    controller.rightBumper().onTrue(new CoralIntake(mechanism));
+    controller2.leftBumper().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(-1000)));
+    controller2.rightBumper().onTrue(new CoralIntake(mechanism));
 
-    controller.povUp().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L4)));
-    controller.povRight().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L3)));
-    controller.povDown().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L1_L2)));
-
-    controller.povLeft().onTrue(Commands.runOnce(() -> climber.runPosition(10)));
+    controller2.povUp().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L4)));
+    controller2.povRight().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L3)));
+    controller2.povDown().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L1_L2)));
   }
 
   /**

@@ -14,7 +14,10 @@
 package frc.robot;
 
 import frc.robot.Constants.PresetConstants;
+import frc.robot.commands.CoralIntake;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -50,6 +53,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Elevator elevator;
   private final Mechanism mechanism;
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -91,8 +95,9 @@ public class RobotContainer {
         break;
     }
 
-    elevator = new Elevator(new ElevatorIOSparkMax() {});
-    mechanism = new Mechanism(new MechanismIOSparkMax() {});
+    elevator = new Elevator(new ElevatorIOSparkMax());
+    mechanism = new Mechanism(new MechanismIOSparkMax());
+    climber = new Climber(new ClimberIOSparkMax());
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -135,15 +140,17 @@ public class RobotContainer {
 
     controller.x().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(0)));
     controller.a().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_REST)));
-    controller.b().onTrue(Commands.runOnce(() ->mechanism.pivotRunPosition(PresetConstants.PIVOT_L3_BELOW)));
+    controller.b().onTrue(Commands.runOnce(() ->mechanism.pivotRunPosition(PresetConstants.PIVOT_Intake)));
     controller.y().onTrue(Commands.runOnce(() -> mechanism.pivotRunPosition(PresetConstants.PIVOT_L4)));
 
     controller.leftBumper().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(-1000)));
-    controller.rightBumper().onTrue(Commands.runOnce(() -> mechanism.coralRunVelocity(1000)));
+    controller.rightBumper().onTrue(new CoralIntake(mechanism));
 
     controller.povUp().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L4)));
     controller.povRight().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L3)));
     controller.povDown().onTrue(Commands.runOnce(() -> elevator.runPosition(PresetConstants.ELEVATOR_L1_L2)));
+
+    controller.povLeft().onTrue(Commands.runOnce(() -> climber.runPosition(10)));
   }
 
   /**

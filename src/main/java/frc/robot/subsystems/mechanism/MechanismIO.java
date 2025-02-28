@@ -71,5 +71,8 @@ public interface MechanismIO {
   /** Stop in open loop. */
   public default void pivotStop() {}
 
+  /** gets the output current of the coral motor */
+  public default double getCoralMotorCurrent() { return 0; }
+
   public default void periodic() {}
 }

@@ -168,6 +168,11 @@ public class Mechanism extends SubsystemBase {
     io.pivotStop();
   }
 
+  /** gets the coral motor's current */
+  public double getCoralCurrent() {
+    return io.getCoralMotorCurrent();
+  }
+
   /** Returns a command to run a quasistatic test in the specified direction. */
   public Command algaeSysIdQuasistatic(SysIdRoutine.Direction direction) {
     return algaeSysId.quasistatic(direction);

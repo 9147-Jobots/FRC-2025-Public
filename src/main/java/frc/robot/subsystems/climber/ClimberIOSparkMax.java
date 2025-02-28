@@ -120,5 +120,7 @@ public class ClimberIOSparkMax implements ClimberIO {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("ClimberMotor1Value", encoders[0].getPosition());
+    SmartDashboard.putNumber("ClimberMotor2Value", encoders[1].getPosition());
   }
 }

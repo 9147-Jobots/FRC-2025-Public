@@ -159,6 +159,11 @@ public class MechanismIOSparkMax implements MechanismIO {
   }
 
   @Override
+  public double getCoralMotorCurrent() {
+    return coral.getOutputCurrent();
+  }
+
+  @Override
   public void algaeSetPosition(double targetPosition, double ffVolts) {
     algae_pid.setReference(
         targetPosition,

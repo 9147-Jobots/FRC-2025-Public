@@ -55,7 +55,7 @@ public final class Constants {
 
     // Pivot presets
     public static final double PIVOT_L4 = -3.785711;
-    public static final double PIVOT_L3_BELOW = -5.642850;
+    public static final double PIVOT_Intake = -2;
     public static final double PIVOT_REST = 0;
   }
 
@@ -168,12 +168,14 @@ public final class Constants {
     public static final MotorType[] MOTOR_TYPE = {MotorType.kBrushless, MotorType.kBrushless};
 
     public static final int[] CAN_TIMEOUT = {250, 250};
-    public static final Boolean[] INVERTED = {false, true};
+    public static final Boolean[] INVERTED = {true, false};
     public static final double[] VOLTAGE_COMPENSATION = {12.0, 12.0};
     public static final int[] SMART_CURRENT_LIMIT = {10, 10};
-    public static final int MAX_VELOCITY = 5000;
+    public static final int MAX_VELOCITY = 1000;
     public static final int MAX_ACCELERATION = 5000;
     public static final float CONVERSION_FACTOR = 1;
+
+    //positions -> 34 ~ max
 
     public static final double[][] PID_MODES = {{5, 0, 0}, // REAL
                                                 {2, 0.5, 0}, // REPLAY
@@ -203,7 +205,7 @@ public final class Constants {
     public static final int ALGAE_CAN_TIMEOUT = 250;
     public static final int PIVOT_CAN_TIMEOUT = 250;
 
-    public static final Boolean CORAL_INVERTED = false;
+    public static final Boolean CORAL_INVERTED = true;
     public static final Boolean ALGAE_INVERTED = false;
     public static final Boolean PIVOT_INVERTED = false;
 

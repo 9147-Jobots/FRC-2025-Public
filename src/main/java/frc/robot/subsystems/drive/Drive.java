@@ -14,6 +14,7 @@
 package frc.robot.subsystems.drive;
 
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Vision;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -146,8 +147,12 @@ public class Drive extends SubsystemBase {
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
 
+    var visionFieldPose = Vision.GetFieldPose();
+    addVisionMeasurement(visionFieldPose.estimatedPose.toPose2d(), visionFieldPose.timestampSeconds);
+
     for (var module : modules) {
       module.updateInputs();
+
     }
 
     odometryLock.unlock();

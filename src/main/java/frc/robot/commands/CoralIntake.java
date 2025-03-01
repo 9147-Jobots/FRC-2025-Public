@@ -19,6 +19,12 @@ public class CoralIntake extends Command {
   double endTime;
   double startTime;
 
+  final double VELOCITY = 2000;
+  final double MAX_DURATION = 10;
+  final double TIME_AFTER_CORAL_CONTACTED = 1;
+  final double MAX_CURRENT = 15;
+  final double CURRENT_BUFFER = 0.1;
+
   public CoralIntake(Mechanism mechanism) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mechanism);
@@ -29,10 +35,10 @@ public class CoralIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_mechanism.coralRunVelocity(2000);
+    m_mechanism.coralRunVelocity(VELOCITY);
     coralContacted = false;
     startTime = Timer.getFPGATimestamp();
-    endTime = startTime + 10; // move to CONSTANTS
+    endTime = startTime + MAX_DURATION; // move to CONSTANTS
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,15 +46,15 @@ public class CoralIntake extends Command {
   public void execute() {
     SmartDashboard.putNumber("Coral current", m_mechanism.getCoralCurrent());
 
-    if (Timer.getFPGATimestamp() - startTime > 0.1) {
-      if (m_mechanism.getCoralCurrent() > 15) {
+    if (Timer.getFPGATimestamp() - startTime > CURRENT_BUFFER) {
+      if (m_mechanism.getCoralCurrent() > MAX_CURRENT) {
         coralContacted = true;
       }
     }
 
     if (coralContacted) {
-      if (Timer.getFPGATimestamp() + 2 < endTime) {
-        endTime = Timer.getFPGATimestamp() + 2;
+      if (Timer.getFPGATimestamp() + TIME_AFTER_CORAL_CONTACTED < endTime) {
+        endTime = Timer.getFPGATimestamp() + TIME_AFTER_CORAL_CONTACTED;
       }
     }
   }
